@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>Question</title>
+	</head>
+		<body>
+		
+		<h1> Question </h1>
+		{% for message in get_flashed_messages() %}
+            <p><b>Error</b>: {{ message }}</p>
+        {% endfor %}
+		<form method="POST">
+						{{form.hidden_tag()}}
+						{{ form.question.label }} {{form.question()}}
+						{{ form.submit()}}
+					</form> 
+		{% for error in form.question.errors %}
+		<br/>{{error}}
+		{% endfor %}
+		<table border=0>
+		{% for sample in Question %}
+		<tr><td>{{sample.content}}</td><td>{{sample.frequency}}</td></tr>
+		{% endfor %}
+		</table>
+					</body>
+					</html>
