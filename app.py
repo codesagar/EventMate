@@ -1,5 +1,6 @@
 import fuzzywuzzy
 from fuzzywuzzy import fuzz
+from azure.storage.blob import BlockBlobService
 from fuzzywuzzy import process
 import unirest
 from flask import Flask, redirect, url_for, render_template, session, flash, request
@@ -15,7 +16,7 @@ import requests
 from werkzeug import secure_filename
 import os
 
-UPLOAD_FOLDER = '/home/em/images'
+UPLOAD_FOLDER = '/home/'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -30,12 +31,16 @@ app.config['OAUTH_CREDENTIALS'] = {
         'secret': 'FsMAqtq2YlurPdfD8NHTn0ZDq2nybnzVqzY5gdV1QB6LqJONen'
     }
 }
+app.config.from_pyfile('config.py')
+account = app.config['ACCOUNT']   # Azure account name
+key = app.config['STORAGE_KEY']      # Azure Storage account access key  
+container = app.config['CONTAINER'] # Container name
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 lm = LoginManager(app)
 lm.login_view = 'index'
-
+blob_service = BlockBlobService(account_name=account, account_key=key)
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -75,8 +80,13 @@ class Event(db.Model):
     event_type = db.Column(db.String(5),nullable=True)
     venue = db.Column(db.String(100),nullable=True)
     creator_id = db.Column(db.Integer, nullable = False)
-    status = db.Column(db.Boolean, default = 0)
+    img = db.Column(db.String(100),nullable=True)
     
+    
+# class fl(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     links = db.Column(db.String(64),nullable=True)
+
 class QuestionForm(Form):
     question = StringField('Question:',validators=[Required('Do not leave empty')])
     submit = SubmitField('Submit')
@@ -135,6 +145,23 @@ def logout():
 def profile():
     return render_template('viewpro.html')
 
+@app.route('/fileserver',methods=['GET', 'POST'])
+def file():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        # fileextension = filename.rsplit('.',1)[1]
+        # Randomfilename = 'sagar'
+        # filename = Randomfilename + '.' + fileextension
+        try:
+            blob_service.create_blob_from_stream(container, filename, file)
+        except Exception:
+            print 'Exception=' , Exception 
+            pass
+        ref =  'http://'+ account + '.blob.core.windows.net/' + container + '/' + filename
+        print ref
+    return render_template('file.html')
+
 @app.route('/editprofile',methods=['GET', 'POST'])
 def editprofile():
     if request.method == 'POST':
@@ -163,13 +190,21 @@ def eventcreation():
     if request.method == 'POST':
         event = Event(title = request.form['Title'],start_date=request.form['StartDate'],end_date=request.form['EndDate'],venue=request.form['EveVenue'],category = request.form['Category'],event_type=request.form['Type'])
         event.creator_id = current_user.social_id
-        db.session.add(event)
-        db.session.commit()
         file = request.files['file']
         filename = secure_filename(file.filename)
         fileextension = filename.rsplit('.',1)[1]
         filename = current_user.nickname + '.' + fileextension
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        try:
+            blob_service.create_blob_from_stream(container, filename, file)
+        except Exception:
+            print 'Exception=' , Exception 
+            pass
+        ref =  'http://'+ account + '.blob.core.windows.net/' + container + '/' + filename
+        print ref
+        event.img = ref
+        db.session.add(event)
+        db.session.commit()
     return render_template('eventcreation.html')
 
 @app.route('/bang', methods=['GET', 'POST'])
@@ -206,13 +241,8 @@ def viewevent(eventid):
     if request.method == 'POST':
         print('This is running')
         ques = request.form['ques']
-        toggle = request.form['toggle']
-        if toggle is '0':
-            event.status = 1
-        else:
-            event.status = 0
         new_ques = Question(content = ques,creator_id = current_user.social_id,event_id = eventid)
-        for sample in Question.query.filter(relevance=1).filter(event_id = eventid):
+        for sample in Question.query.filter_by(relevance = 1).filter_by(event_id = eventid):
             response = unirest.post("https://amtera.p.mashape.com/relatedness/en",headers={"X-Mashape-Key": "u4kxLBXvcomshaXdgapkkrdfh3EFp15R7FojsnLlMr1IAO9wqA","Content-Type": "application/json","Accept": "application/json"},params=("{\"t1\":\""+sample.content+"\",\"t2\":\""+new_ques.content+"\"}"))
             responseF = fuzz.ratio(sample.content,new_ques.content)
             if response.body['v'] > 0.7 or responseF > 70:
