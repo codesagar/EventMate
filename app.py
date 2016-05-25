@@ -1,6 +1,3 @@
-import fuzzywuzzy
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 import unirest
 from flask import Flask, redirect, url_for, render_template, session, flash, request
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -38,7 +35,6 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64), nullable=True)
     email = db.Column(db.String(64), nullable=True)
     age = db.Column(db.Integer, nullable=True)
-    date = db.Column(db.String(10),nullable=True)
     pro_pic = db.Column(db.String(128), nullable=True)
     country = db.Column(db.String(32), nullable=True)
     skills = db.Column(db.String(40),nullable=True)
@@ -111,7 +107,7 @@ def oauth_callback(provider):
         return redirect(url_for('index'))
     user = User.query.filter_by(social_id=social_id).first()
     if not user:
-        user = User(social_id=social_id,nickname=email,email=email)
+        user = User(social_id=social_id, email=email)
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
@@ -137,7 +133,7 @@ def editprofile():
             return redirect(url_for('index'))
         user.nickname=request.form['Name']
         user.email=request.form['Email']
-        user.date=request.form['DOB']
+     #   user.date=request.form['DOB']
         user.country=request.form['Country']
         print request.form['Country']
         user.sex="Male"
@@ -157,16 +153,6 @@ def eventcreation():
         db.session.commit()
     return render_template('eventcreation.html')
 
-#--view events
-@app.route('/viewevents', methods=['GET', 'POST'])
-def viewevents():
-    if request.method == 'POST':
-        event = Event(title = request.form['Title'],category = request.form['Category'],start_date=request.form['StartDate'],end_date=request.form['EndDate'],event_type=request.form['Type'])
-        db.session.add(event)
-        db.session.commit()
-    return render_template('viewevent.html')
-
-
 @app.route('/questions', methods = ['GET','POST'])
 def question():
     form = QuestionForm()
@@ -178,16 +164,14 @@ def question():
         new_ques = Question(content = ques)
         for sample in Question.query.filter_by(relevance=1):
             response = unirest.post("https://amtera.p.mashape.com/relatedness/en",headers={"X-Mashape-Key": "u4kxLBXvcomshaXdgapkkrdfh3EFp15R7FojsnLlMr1IAO9wqA","Content-Type": "application/json","Accept": "application/json"},params=("{\"t1\":\""+sample.content+"\",\"t2\":\""+new_ques.content+"\"}"))
-            responseF = fuzz.ratio(sample.content,new_ques.content)
-            if response.body['v'] > 0.7 or responseF>70:
+            if response.body['v'] > 0.7:
                 new_ques.relevance = 0
                 new_freq = sample.frequency + 1
                 sample.frequency = new_freq
                 db.session.add(sample)
         db.session.add(new_ques)
         db.session.commit()
-    return render_template('questions.html',form = form,Question=Question.query.filter_by(relevance=1).order_by(Question.frequency.desc()).all())
-
+    return render_template('questions.html',form = form,Question=Question.query.filter_by(relevance=1).order_by(Question.frequency.desc()).all())    
 
 
 if __name__ == '__main__':
