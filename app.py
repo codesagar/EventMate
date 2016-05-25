@@ -91,6 +91,8 @@ class QuestionForm(Form):
     question = StringField('Question:',validators=[Required('Do not leave empty')])
     submit = SubmitField('Submit')
 
+links = {}
+
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -145,9 +147,10 @@ def logout():
 def profile():
     return render_template('viewpro.html')
 
-@app.route('/fileserver',methods=['GET', 'POST'])
-def file():
+@app.route('/fileserver/<eventid>',methods=['GET', 'POST'])
+def file(eventid):
     if request.method == 'POST':
+        event = Event.query.filter_by(id=eventid).first()
         file = request.files['file']
         filename = secure_filename(file.filename)
         # fileextension = filename.rsplit('.',1)[1]
@@ -160,6 +163,8 @@ def file():
             pass
         ref =  'http://'+ account + '.blob.core.windows.net/' + container + '/' + filename
         print ref
+        links[event.title].append(ref)
+        print links[event.title]
     return render_template('file.html')
 
 @app.route('/editprofile',methods=['GET', 'POST'])
@@ -171,7 +176,7 @@ def editprofile():
         if not user:
             return redirect(url_for('index'))
         user.nickname=request.form['Name']
-        user.email=request.form['Email']
+        #user.email=request.form['Email']
         user.date=request.form['DOB']
         user.country=request.form['Country']
         user.sex="Male"
@@ -205,6 +210,7 @@ def eventcreation():
         event.img = ref
         db.session.add(event)
         db.session.commit()
+        links[event.title] = []
     return render_template('eventcreation.html')
 
 @app.route('/bang', methods=['GET', 'POST'])
@@ -252,8 +258,24 @@ def viewevent(eventid):
                 db.session.add(sample)      
         db.session.add(new_ques)
         db.session.commit()
-    
-    return render_template('viewevent.html',event=event,Question=Question.query.filter_by(relevance=1).filter_by(event_id=eventid).order_by(Question.frequency.desc()).all())
+        # event = Event.query.filter_by(id=eventid).first()
+        # file = request.files['file']
+        # filename = secure_filename(file.filename)
+        # fileextension = filename.rsplit('.',1)[1]
+        # Randomfilename = 'sagar'
+        # filename = Randomfilename + '.' + fileextension
+        # try:
+        #     blob_service.create_blob_from_stream(container, filename, file)
+        # except Exception:
+        #     print 'Exception=' , Exception 
+        #     pass
+        # ref =  'http://'+ account + '.blob.core.windows.net/' + container + '/' + filename
+        # print ref
+        # links[event.title].append(ref)
+        # print links[event.title]
+        # print 'heeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        # print links[event.title]
+    return render_template('viewevent.html',links=links,event=event,Question=Question.query.filter_by(relevance=1).filter_by(event_id=eventid).order_by(Question.frequency.desc()).all())
 
 @app.route('/listevents',methods=['GET', 'POST'])
 def listevents():

@@ -373,7 +373,7 @@
                     <button type="submit" class="btn btn-info pull-right">Save</button>
                   </div><!-- /.box-footer -->
           
-<div class="col-md-8">
+<div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Question Pool</h3>
@@ -403,10 +403,48 @@
             
           </div>
           <!-- /.box -->
+
          
                   </div><!-- /.box-body -->
                                 </form>
+
               </div>
+
+            <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Files</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tbody><tr>
+                  <th style="width: 10px">#</th>
+                  <th>Links</th>
+                  
+                                  </tr>
+                <tr>
+                {%set i=1%}
+                  {% for sample in links[event.title] %}
+                         <tr>
+                        <td>{{i}}{%set i=i+1%}</td>
+                         <td><a href={{sample}}>{{sample}}</a></td></tr>
+                        {% endfor %}
+                
+                </tr>
+                
+              </tbody></table>
+              </td>
+<div class="form-group">
+                    <label for="inputEmail3" class="col-sm-8 control-label"><a href="{{ url_for('file',eventid=event.id) }}">Upload Files Here</a></label>
+          </div>
+              </div>
+              
+               
+            </div>
+            <!-- /.box-body -->
+            
+          </div>
       </div><!-- /.row (main row) -->
 	 
 
