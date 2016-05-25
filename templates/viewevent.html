@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+    .toggle-button { background-color: white; margin: 5px 0; border-radius: 20px; border: 2px solid #D0D0D0; height: 24px; cursor: pointer; width: 50px; position: relative; display: inline-block; user-select: none; -webkit-user-select: none; -ms-user-select: none; -moz-user-select: none; }
+.toggle-button button { cursor: pointer; outline: 0; display:block; position: absolute; left: 0; top: 0; border-radius: 100%; width: 30px; height: 30px; background-color: white; float: left; margin: -3px 0 0 -3px; border: 2px solid #D0D0D0; transition: left 0.3s; }
+.toggle-button-selected { background-color: #83B152; border: 2px solid #7DA652; }
+.toggle-button-selected button { left: 26px; top: 0; margin: 0; border: none; width: 24px; height: 24px; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
+    </style>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EventMate | Create Event</title>
+    <title>EventMate | View Event</title>
     <!-- Tell the browser to be responsive to screen width -->
-   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -47,7 +52,6 @@
   <link rel="stylesheet" href="static/plugins/timepicker/bootstrap-timepicker.min.css">
   <!-- Select2 -->
   <link rel="stylesheet" href="static/plugins/select2/select2.min.css">
-
   <!-- Theme style -->
   <link rel="stylesheet" href="static/dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -70,7 +74,7 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="skin-blue sidebar-mini sidebar-collapse">
+  <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
       <header class="main-header">
@@ -152,7 +156,7 @@
           </form>
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
-                  <ul class="sidebar-menu">
+                 <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
             <li>
               <a href="/">
@@ -181,18 +185,12 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="/eventcreation"><i class="fa fa-circle-o"></i> Create</a></li>
-                <li><a href="/viewevents"><i class="fa fa-circle-o"></i> View</a></li>
+                <li><a href="/listevents"><i class="fa fa-circle-o"></i> List</a></li>
         
                 
               </ul>
             </li>
             
-            <li>
-              <a href="/questions">
-                <i class="fa fa-envelope"></i> <span>Questions</span>
-                <small class="label pull-right bg-yellow">12</small>
-              </a>
-            </li>
             
         <!-- /.sidebar -->
       </aside>
@@ -200,7 +198,10 @@
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
+        
+          
+        <section class="content-header" >
+
           <h1>
             Dashboard
             <small>Control panel</small>
@@ -212,9 +213,10 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" >
           <!-- Small boxes (Stat box) -->
-          <div class="row">
+          
+          <div class="row" >
             <div class="col-lg-3 col-xs-6">
               <!-- small box -->
               <div class="small-box bg-aqua">
@@ -269,106 +271,159 @@
             </div><!-- ./col -->
           </div><!-- /.row -->
           <!-- Main row -->
-			<div class="row">		
-			<div class="col-md-6">
+<section class="pic">
+
+  <div class="row" >   
+<div class="col-md-12" >
+  <div class="box box-info">
+                <div class="box-header with-border">
+					
+
+                <img src="/static/images/1.jpeg" height="500px" width="1550px"/>
+
+</div>
+</div>		</div></div>
+
+
+<div class="row" >   
+
+      <div class="col-md-8" >
               <!-- Horizontal Form -->
               <div class="box box-info">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Event Creation</h3>
+                  <h3 class="box-title">View Event</h3>
                 </div><!-- /.box-header -->
                 <!-- form start -->
 
-                <form class="form-horizontal" name="Title For Event" method="post" enctype="multipart/form-data">
+              
+                <form class="form-horizontal" name="ViewEvent" method="post">
                   <div class="box-body">
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Title</label>
-                      <div class="col-sm-10">
-                        <input class="form-control" placeholder="Enter The Event Name" type="text" name="Title" required>
+                      <label for="inputEmail3" class="col-sm-2 control-label">Event Title</label>
+                     <div class="col-sm-10">
+                        <label for="inputEmail3" class="col-sm-3 control-label">{{ event.title }}</label>
                       </div>
                     </div>
                   
-                    <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Category</label>
-					<div class="col-sm-10">
+              
+        <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Start Date</label>
+        <div class="col-sm-10">
                  
                 
-                <select class="form-control select2" style="width: 100%;" name="Category">
-                  <option>Conference</option>
-                  <option>Data Science</option>
-                  <option>Security</option>
-                  <option>Delaware</option>
-                  <option>Tennessee</option>
-                  <option>Texas</option>
-                  <option>Washington</option>
-                </select>
-              </div>
-				</div>
-				<div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Start Date</label>
-                      <div class="col-sm-10">
-					  <div class="input-group">
-                        <div class="input-group-addon">						
-                        <i class="fa fa-calendar"></i>
-                        </div>
-                        <input class="form-control" id="datepicker" name="StartDate" data-inputmask="'alias': 'dd/mm/yyyy'" placeholder="dd/mm/yyyy"data-mask="" type="text" required pattern="\d{1,2}/\d{1,2}/\d{4}">
-                        </div>
+                        <label for="inputEmail3" class="col-sm-3 control-label">{{ event.start_date }}</label>
                       </div>
                     </div>
-					<div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">End Date new</label>
-                      <div class="col-sm-10">
-					  <div class="input-group">
-                        <div class="input-group-addon">           
-                        <i class="fa fa-calendar"></i>
-                        </div>
-                        <input class="form-control" id="datepicker1" name="EndDate" data-inputmask="'alias': 'dd/mm/yyyy'" 
-                        placeholder="dd/mm/yyyy"data-mask="" type="text" required pattern="\d{1,2}/\d{1,2}/\d{4}">
-                        </div>
-                      </div>
-                      </div>
-                    
-					<div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Type</label>
-                      <div class="col-sm-10">
-                        <div class="radio">
-                        <label>
-                          <input name="Type" id="optionsRadios1" value="Paid" checked="" type="radio" name="EvePaid">
-                          Paid
-                        </label>
-                      </div>
-                      <div class="radio">
-                        <label>
-                          <input name="Type" id="optionsRadios2" value="Free" type="radio" name="EveFree">
-                          Free
-                        </label>
-                      </div>
-					  </div>
-                    </div>
-					   <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-2 control-label">Venue</label>
-                      <div class="col-sm-8">
-                        <textarea class="form-control" rows="3" placeholder="Enter The Veue For Event" name="EveVenue" required></textarea>
-                      </div>
-                    </div>
-				 <input type="file" name="file">													
-				<div class="form-group">
-					<label for="exampleInputFile" class="col-sm-2 control-label">Event Details </label>
-					            <div class="col-sm-8">
-         
-					 <p class="help-block">Upload Event Brochure/Flyers Here!</p>
-				</div> 
-      </div>
-                  </div><!-- /.box-body -->
-                
 
-				<div class="box-footer">
+          <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">End Date</label>
+                    <div class="col-sm-10">
+                 
+                
+                        <label for="inputEmail3" class="col-sm-3 control-label">{{ event.end_date }}</label>
+                      </div>
+        </div>
+             <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-2 control-label">Venue</label>
+                      <div class="col-sm-10">
+              
+                
+                        <label for="inputEmail3" class="col-sm-3 control-label">{{ event.venue }}</label>
+                      </div>   
+                
+                        
+                      </div> 
+                    
+                    
+                      <div style="text-align:center">
+                   <div class="toggle-button">
+
+    <button type="submit" value="{{ event.status }}" name="toggle"></button>
+</div><div style="text-align:center" class=""> 
+                   <label for="inputEmail3" class="col-sm-6.5 control-label">Activate Q&A</label><br></br>
+                 </div>        </div>
+                  </div><!-- /.box-body -->
+                    
+
+        <div class="box-footer" style="text-align:center">
+                    
+                    
+                  </div><!-- /.box-footer -->
+                </form>
+      
+              </div>
+      
+      </div>
+	  {% if event.status == 1 %}
+      <div class="col-md-8">
+              <!-- Horizontal Form -->
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Question</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+
+                <form class="form-horizontal" name="questions" method="POST">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Question ?</label>
+                      <div class="col-sm-10">
+                        <input class="form-control" placeholder="Enter Your Question" type="text" name="ques" required>
+                      </div>
+                    </div>
+                    
+                  <div class="box-footer">
                     <button type="submit" class="btn btn-default">Cancel</button>
                     <button type="submit" class="btn btn-info pull-right">Save</button>
                   </div><!-- /.box-footer -->
-                </form>
-           		</div>
-			</div><!-- /.row (main row) -->
+          
+<div class="col-md-8">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Question Pool</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tbody><tr>
+                  <th style="width: 10px">#</th>
+                  <th>Questions</th>
+                  <th>Frequency Ranking</th>
+                                  </tr>
+                <tr>
+                {%set i=1%}
+                  {% for sample in Question %}
+                         <tr>
+                        <td>{{i}}{%set i=i+1%}</td>
+                         <td>{{sample.content}}</td><td>{{sample.frequency}}</td></tr>
+                        {% endfor %}
+                
+                </tr>
+                
+              </tbody></table>
+              </td></div>
+            </div>
+            <!-- /.box-body -->
+            
+          </div>
+          <!-- /.box -->
+         
+                  </div><!-- /.box-body -->
+                                </form>
+              </div>
+      </div><!-- /.row (main row) -->
+	  {% else %}
+	  {% endif %}
+
+
+     </section>
+
+
+
         </section>
+     
+
+      <!-- /.content -->
 			<!-- /.content -->
 
 		</div><!-- /.content-wrapper -->
@@ -419,8 +474,18 @@
     <script src="static/select2.js"></script>
     
 <script>
+  
+$(document).on('click', '.toggle-button', function() {
+    $(this).toggleClass('toggle-button-selected'); 
+});
+
+
   $(function () {
     //Initialize Select2 Elements
+    
+
+
+
     $('#select').select2({
           // specify tags
           tags: ["JavaScript", "Python", "C++", "MySQL", "MongoDB"]
@@ -458,10 +523,6 @@
 
     //Date picker
     $('#datepicker').datepicker({
-      autoclose: true
-    });
-
-    $('#datepicker1').datepicker({
       autoclose: true
     });
 

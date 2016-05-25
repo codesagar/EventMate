@@ -1,2 +1,2 @@
-flask-oauth-example
-===================
+# eventmate
+Final year GTU project

@@ -5,6 +5,7 @@ Flask-Bootstrap==3.3.6.0
 Flask-Login==0.3.2
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
+fuzzywuzzy==0.10.0
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23

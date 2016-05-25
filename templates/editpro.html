@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EventMate | Profile</title>
+    <title>EventMate | Edit Profile</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -93,6 +93,7 @@
          
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
+       
             <ul class="nav navbar-nav">
               <!-- Messages: style can be found in dropdown.less-->
               
@@ -153,20 +154,29 @@
           </form>
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
-          <ul class="sidebar-menu">
+               <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
-            <li>
-              <a href="#">
+            <li >
+              <a href="/">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
               </a>
-              
-            </li>
-          <li class="active treeview">
+              </li>
+            
+ <li class="treeview">
+            <li class="active treeview">
               <a href="#">
-                <i class="fa fa-th"></i> <span>Profile</span> 
+            
+                <i class="fa fa-th"></i>
+                <span>Profile</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
-            </li>
-          
+              <ul class="treeview-menu">
+                <li><a href="/editprofile"><i class="fa fa-circle-o"></i> Edit</a></li>
+                <li><a href="/profile"><i class="fa fa-circle-o"></i> View</a></li>
+                </ul>
+        </li>
+        </li>
+
          
             <li class="treeview">
               <a href="#">
@@ -175,25 +185,19 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> Create</a></li>
-                <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> View</a></li>
-				<li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Enrolled</a></li>
+                <li><a href="/eventcreation"><i class="fa fa-circle-o"></i> Create</a></li>
+                <li><a href="/viewevents"><i class="fa fa-circle-o"></i> View</a></li>
+        
                 
               </ul>
             </li>
+            
             <li>
-              <a href="pages/calendar.html">
-                <i class="fa fa-calendar"></i> <span>Calendar</span>
-                <small class="label pull-right bg-red">3</small>
-              </a>
-            </li>
-            <li>
-              <a href="pages/mailbox/mailbox.html">
-                <i class="fa fa-envelope"></i> <span>Mailbox</span>
+              <a href="/questions">
+                <i class="fa fa-envelope"></i> <span>Questions</span>
                 <small class="label pull-right bg-yellow">12</small>
               </a>
-            </li>
-            
+            </li>     
         <!-- /.sidebar -->
       </aside>
       <!-- Content Wrapper. Contains page content 22 -->
@@ -281,7 +285,7 @@
                     <div class="form-group">
                       <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
                       <div class="col-sm-10">
-                        <input class="form-control" id="inputEmail3" placeholder="Email" name="Email" type="email" autocomplete="off" required title="abc@example.com">
+                        <label for="inputEmail3" class="form-control">{{ current_user.email }}</label>
                       </div>
                     </div>
 
@@ -293,7 +297,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="datepicker" required>
+                  <input type="text" class="form-control pull-right" id="datepicker" name="DOB" required>
                 </div>
                 </div>
                 <!-- /.input group -->
