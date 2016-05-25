@@ -15,7 +15,7 @@ import requests
 from werkzeug import secure_filename
 import os
 
-UPLOAD_FOLDER = '/home/sagar/'
+UPLOAD_FOLDER = '/home/em/images'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
