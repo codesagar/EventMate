@@ -12,7 +12,7 @@ MarkupSafe==0.23
 pipreqs==0.4.2
 poster==0.8.1
 rauth==0.7.2
-requests==2.10.0
+requests>=2.20.0
 SQLAlchemy==1.0.13
 Unirest==1.1.7
 visitor==0.1.3
